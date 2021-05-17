@@ -14310,7 +14310,7 @@ for the purposes of this tutorial, we will use python-chess.</p>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[475]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[505]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -14321,7 +14321,6 @@ for the purposes of this tutorial, we will use python-chess.</p>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">chess.pgn</span> <span class="k">as</span> <span class="nn">pgn</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">mstats</span>
 </pre></div>
 
      </div>
@@ -16616,71 +16615,10 @@ so a higher confidence is not needed.</p>
 mannwhitneyu method to calculate our p-value.</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[494]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2_contingency</span>
-
-<span class="n">table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span><span class="nb">list</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())])</span>
-<span class="n">table</span><span class="p">[</span><span class="n">table</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">stat</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">chi2_contingency</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dof=</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dof</span><span class="p">)</span>
-<span class="c1">#print(expected)</span>
-<span class="c1"># interpret test-statistic</span>
-<span class="n">prob</span> <span class="o">=</span> <span class="mf">0.95</span>
-<span class="n">critical</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="n">dof</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;probability=</span><span class="si">%.3f</span><span class="s1">, critical=</span><span class="si">%.3f</span><span class="s1">, stat=</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="n">critical</span><span class="p">,</span> <span class="n">stat</span><span class="p">))</span>
-<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">critical</span><span class="p">:</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Dependent (reject H0)&#39;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Independent (fail to reject H0)&#39;</span><span class="p">)</span>
-<span class="c1"># interpret p-value</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">prob</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;significance=</span><span class="si">%.3f</span><span class="s1">, p=</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
-<span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">alpha</span><span class="p">:</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Dependent (reject H0)&#39;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Independent (fail to reject H0)&#39;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>dof=485
-probability=0.950, critical=537.340, stat=0.000
-Independent (fail to reject H0)
-significance=0.050, p=1.000
-Independent (fail to reject H0)
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[401]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get the u-statistic and p-value</span>
@@ -16692,28 +16630,6 @@ Independent (fail to reject H0)
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>The U-statistic is 103398.0 
-The p-value is 0.000056
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div>
